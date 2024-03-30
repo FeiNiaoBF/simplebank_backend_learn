@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 12,
+            "activePatchIndex": 13,
             "patches": [
                 {
                     "date": 1711786127125,
@@ -56,6 +56,10 @@
                 {
                     "date": 1711786998713,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,4 @@\n--- name: C\n+-- name: Cr\n INSERT INTO accounts (owner, balance, currency)\n VALUES ($1, $2, $3)\n RETURNING *;\n"
+                },
+                {
+                    "date": 1711789094834,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,5 +19,6 @@\n \n -- name: UpdateAccount :one\n UPDATE accounts\n SET balance = $2\n-WHERE id = $1;\n+WHERE id = $1\n+;\n"
                 }
             ],
             "date": 1711786127124,
