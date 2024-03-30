@@ -1,0 +1,50 @@
+{
+    "sourceFile": "db/query/transfer.sql",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1711798351500,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711798359745,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n--- name: CreateEntry :one\n+-- name: CreateTransf :one\n INSERT INTO entries (\n     account_id,\n     amount\n ) VALUES (\n"
+                },
+                {
+                    "date": 1711798370019,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,13 @@\n--- name: CreateTransf :one\n+-- name: CreateTransfer :one\n INSERT INTO entries (\n     account_id,\n     amount\n ) VALUES (\n     $1, $2\n ) RETURNING *;\n \n--- name: GetEntry :one\n+-- name: GetTransfer :one\n SELECT * FROM entries\n WHERE id = $1 LIMIT 1;\n \n -- name: ListEntries :many\n"
+                },
+                {
+                    "date": 1711798378245,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n -- name: GetTransfer :one\n SELECT * FROM entries\n WHERE id = $1 LIMIT 1;\n \n--- name: ListEntries :many\n+-- name: ListTransfes :many\n SELECT * FROM entries\n WHERE account_id = $1\n ORDER BY id\n LIMIT $2\n"
+                },
+                {
+                    "date": 1711798404177,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n -- name: CreateTransfer :one\n INSERT INTO entries (\n-    account_id,\n+    from_account_id,\n+    to\n     amount\n ) VALUES (\n     $1, $2\n ) RETURNING *;\n@@ -9,9 +10,9 @@\n -- name: GetTransfer :one\n SELECT * FROM entries\n WHERE id = $1 LIMIT 1;\n \n--- name: ListTransfes :many\n+-- name: ListTransfers :many\n SELECT * FROM entries\n WHERE account_id = $1\n ORDER BY id\n LIMIT $2\n"
+                },
+                {
+                    "date": 1711798416675,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,11 @@\n -- name: CreateTransfer :one\n INSERT INTO entries (\n     from_account_id,\n-    to\n+    to_account_id,\n     amount\n ) VALUES (\n-    $1, $2\n+    $1, $2, $3\n ) RETURNING *;\n \n -- name: GetTransfer :one\n SELECT * FROM entries\n"
+                },
+                {
+                    "date": 1711798431444,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,13 +7,13 @@\n     $1, $2, $3\n ) RETURNING *;\n \n -- name: GetTransfer :one\n-SELECT * FROM entries\n+SELECT * FROM transfers\n WHERE id = $1 LIMIT 1;\n \n -- name: ListTransfers :many\n-SELECT * FROM entries\n+SELECT * FROM \n WHERE account_id = $1\n ORDER BY id\n LIMIT $2\n OFFSET &3;\n"
+                },
+                {
+                    "date": 1711798442963,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n -- name: CreateTransfer :one\n-INSERT INTO entries (\n+INSERT INTO transfers (\n     from_account_id,\n     to_account_id,\n     amount\n ) VALUES (\n@@ -11,9 +11,10 @@\n SELECT * FROM transfers\n WHERE id = $1 LIMIT 1;\n \n -- name: ListTransfers :many\n-SELECT * FROM \n+SELECT * FROM transfers\n+WHERE from_account_id = $1 OR to_account_id = $1\n WHERE account_id = $1\n ORDER BY id\n LIMIT $2\n OFFSET &3;\n"
+                },
+                {
+                    "date": 1711798545327,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,8 @@\n WHERE id = $1 LIMIT 1;\n \n -- name: ListTransfers :many\n SELECT * FROM transfers\n-WHERE from_account_id = $1 OR to_account_id = $1\n-WHERE account_id = $1\n+WHERE from_account_id = $1 OR to_account_id = $2\n ORDER BY id\n LIMIT $2\n OFFSET &3;\n"
+                }
+            ],
+            "date": 1711798351499,
+            "name": "Commit-0",
+            "content": "-- name: CreateEntry :one\nINSERT INTO entries (\n    account_id,\n    amount\n) VALUES (\n    $1, $2\n) RETURNING *;\n\n-- name: GetEntry :one\nSELECT * FROM entries\nWHERE id = $1 LIMIT 1;\n\n-- name: ListEntries :many\nSELECT * FROM entries\nWHERE account_id = $1\nORDER BY id\nLIMIT $2\nOFFSET &3;\n"
+        }
+    ]
+}
