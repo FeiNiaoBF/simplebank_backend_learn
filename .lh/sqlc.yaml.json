@@ -1,0 +1,34 @@
+{
+    "sourceFile": "sqlc.yaml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1711784526186,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711784794582,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,11 @@\n-version: '2'\n-sql:\n-  - engine: 'mysql'\n-    queries: 'query.sql'\n-    schema: 'schema.sql'\n-    gen:\n-      go:\n-        package: 'tutorial'\n-        out: 'tutorial'\n+version: '1'\n+packages:\n+  - name: 'db'\n+    path: './db/sqlc'\n+    queries: './db/query/'\n+    schema: './db/migration/'\n+    engine: 'postgresql'\n+    emit_json_tags: true\n+    emit_prepared_queries: false\n+    emit_interface: false\n+    emit_exact_table_names: false\n"
+                },
+                {
+                    "date": 1711785054746,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n version: '1'\n packages:\n+  \n   - name: 'db'\n     path: './db/sqlc'\n     queries: './db/query/'\n     schema: './db/migration/'\n"
+                },
+                {
+                    "date": 1711785062349,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n version: '1'\n packages:\n-  # name\n+  # name \n   - name: 'db'\n     path: './db/sqlc'\n     queries: './db/query/'\n     schema: './db/migration/'\n"
+                },
+                {
+                    "date": 1711785078519,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n   # name of the Go package\n   - name: 'db'\n   # path to directory containing the SQL files\n     path: './db/sqlc'\n+    \n     queries: './db/query/'\n     schema: './db/migration/'\n     engine: 'postgresql'\n     emit_json_tags: true\n"
+                }
+            ],
+            "date": 1711784526185,
+            "name": "Commit-0",
+            "content": "version: '2'\nsql:\n  - engine: 'mysql'\n    queries: 'query.sql'\n    schema: 'schema.sql'\n    gen:\n      go:\n        package: 'tutorial'\n        out: 'tutorial'\n"
+        }
+    ]
+}

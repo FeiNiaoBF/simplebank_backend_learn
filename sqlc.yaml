@@ -1,0 +1,20 @@
+version: '1'
+packages:
+  # name of the Go package
+  - name: 'db'
+    # path to directory containing the SQL files
+    path: './db/sqlc'
+    # to the directory look for the SQL query files
+    queries: './db/query/'
+    # migration files.
+    schema: './db/migration/'
+    # what database engine to use
+    engine: 'postgresql'
+    # to add JSON tags to the generated Go struct fields.
+    emit_json_tags: true
+    # to generate codes that work with prepared statement.
+    emit_prepared_queries: false
+    # to generate Querier interface for the generated package.
+    emit_interface: false
+    # singularize the table names.
+    emit_exact_table_names: false

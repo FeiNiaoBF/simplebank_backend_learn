@@ -1,0 +1,54 @@
+{
+    "sourceFile": "db/migration/000001_init_schema.down.sql",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 9,
+            "patches": [
+                {
+                    "date": 1711775510964,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711775516181,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n-D\n+DRDP TA\n"
+                },
+                {
+                    "date": 1711775524521,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n-DRDP TA\n+DRDP TABLE IF EXISTS ;\n"
+                },
+                {
+                    "date": 1711775534876,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,3 @@\n-DRDP TABLE IF EXISTS ;\n+DRDP TABLE IF EXISTS entries;\n+DRDP TABLE IF EXISTS entries;\n+DRDP TABLE IF EXISTS entries;\n"
+                },
+                {
+                    "date": 1711775554177,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n DRDP TABLE IF EXISTS entries;\n+DRDP TABLE IF EXISTS ;\n DRDP TABLE IF EXISTS entries;\n-DRDP TABLE IF EXISTS entries;\n"
+                },
+                {
+                    "date": 1711775560386,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n DRDP TABLE IF EXISTS entries;\n-DRDP TABLE IF EXISTS ;\n+DRDP TABLE IF EXISTS transf;\n DRDP TABLE IF EXISTS entries;\n"
+                },
+                {
+                    "date": 1711775565766,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n DRDP TABLE IF EXISTS entries;\n-DRDP TABLE IF EXISTS transf;\n-DRDP TABLE IF EXISTS entries;\n+DRDP TABLE IF EXISTS transfers;\n+DRDP TABLE IF EXISTS ;\n"
+                },
+                {
+                    "date": 1711775571158,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n DRDP TABLE IF EXISTS entries;\n DRDP TABLE IF EXISTS transfers;\n-DRDP TABLE IF EXISTS ;\n+DRDP TABLE IF EXISTS accounts;\n"
+                },
+                {
+                    "date": 1711778708261,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n DRDP TABLE IF EXISTS entries;\n DRDP TABLE IF EXISTS transfers;\n-DRDP TABLE IF EXISTS accounts;\n+DROP TABLE IF EXISTS accounts;\n"
+                },
+                {
+                    "date": 1711778715532,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n-DRDP TABLE IF EXISTS entries;\n-DRDP TABLE IF EXISTS transfers;\n+DROP TABLE IF EXISTS entries;\n+DROP TABLE IF EXISTS transfers;\n DROP TABLE IF EXISTS accounts;\n"
+                }
+            ],
+            "date": 1711775510964,
+            "name": "Commit-0",
+            "content": "D\n"
+        }
+    ]
+}
