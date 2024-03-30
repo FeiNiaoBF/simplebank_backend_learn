@@ -1,0 +1,94 @@
+{
+    "sourceFile": "db/query/entry.sql",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 19,
+            "patches": [
+                {
+                    "date": 1711797742435,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711797773963,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n---\n+-- name: Crea\n"
+                },
+                {
+                    "date": 1711797782517,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,2 @@\n--- name: Crea\n+-- name: CreateEntry :one\n+\n"
+                },
+                {
+                    "date": 1711797789451,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,2 @@\n -- name: CreateEntry :one\n-\n+INSERT INTO entries\n"
+                },
+                {
+                    "date": 1711797795760,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,4 @@\n -- name: CreateEntry :one\n-INSERT INTO entries\n+INSERT INTO entries (\n+    account_id,\n+)\n"
+                },
+                {
+                    "date": 1711797802549,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,5 @@\n -- name: CreateEntry :one\n INSERT INTO entries (\n     account_id,\n+    amount\n )\n"
+                },
+                {
+                    "date": 1711797834359,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n -- name: CreateEntry :one\n INSERT INTO entries (\n     account_id,\n     amount\n-)\n+) \n"
+                },
+                {
+                    "date": 1711797845693,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,7 @@\n -- name: CreateEntry :one\n INSERT INTO entries (\n     account_id,\n     amount\n-) \n+) VALUES (\n+    $1, $2\n+)\n"
+                },
+                {
+                    "date": 1711797855169,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,4 @@\n -- name: CreateEntry :one\n-INSERT INTO entries (\n-    account_id,\n-    amount\n-) VALUES (\n-    $1, $2\n-)\n+INSERT INTO entries (account_id, amount)\n+VALUES ($1, $2) REFERENCES *\n+\n"
+                },
+                {
+                    "date": 1711797865506,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,10 @@\n -- name: CreateEntry :one\n-INSERT INTO entries (account_id, amount)\n-VALUES ($1, $2) REFERENCES *\n+INSERT INTO entries (\n+    account_id,\n+    amount\n+) VALUES (\n+    $1, $2\n+) REFERENCES *\n \n+-- name: GetEntry :one\n+SELE\n"
+                },
+                {
+                    "date": 1711797872065,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,5 +6,6 @@\n     $1, $2\n ) REFERENCES *\n \n -- name: GetEntry :one\n-SELE\n+SELECT * FROM entries\n+WHERE id = $1\n"
+                },
+                {
+                    "date": 1711797878120,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,4 +8,6 @@\n \n -- name: GetEntry :one\n SELECT * FROM entries\n WHERE id = $1\n+\n+-- name: GetEntries :many\n"
+                },
+                {
+                    "date": 1711797884300,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,5 +9,5 @@\n -- name: GetEntry :one\n SELECT * FROM entries\n WHERE id = $1\n \n--- name: GetEntries :many\n+-- name: ListEntries :many\n"
+                },
+                {
+                    "date": 1711797891718,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,4 +10,5 @@\n SELECT * FROM entries\n WHERE id = $1\n \n -- name: ListEntries :many\n+SELECT * Fr\n"
+                },
+                {
+                    "date": 1711797898234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,5 +10,6 @@\n SELECT * FROM entries\n WHERE id = $1\n \n -- name: ListEntries :many\n-SELECT * Fr\n+SELECT * FROM entries\n+WHERE\n"
+                },
+                {
+                    "date": 1711797904846,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,5 +11,5 @@\n WHERE id = $1\n \n -- name: ListEntries :many\n SELECT * FROM entries\n-WHERE\n+WHERE account_id = $1\n"
+                },
+                {
+                    "date": 1711797911021,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,4 +12,5 @@\n \n -- name: ListEntries :many\n SELECT * FROM entries\n WHERE account_id = $1\n+OR\n"
+                },
+                {
+                    "date": 1711797918526,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,5 +12,6 @@\n \n -- name: ListEntries :many\n SELECT * FROM entries\n WHERE account_id = $1\n-OR\n+ORDER BY id\n+\n"
+                },
+                {
+                    "date": 1711797930299,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,5 +13,6 @@\n -- name: ListEntries :many\n SELECT * FROM entries\n WHERE account_id = $1\n ORDER BY id\n-\n+LIMIT $2\n+OFFSET &3\n"
+                },
+                {
+                    "date": 1711798080437,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n ) REFERENCES *\n \n -- name: GetEntry :one\n SELECT * FROM entries\n-WHERE id = $1 LIMIT\n+WHERE id = $1 LIMIT \n \n -- name: ListEntries :many\n SELECT * FROM entries\n WHERE account_id = $1\n"
+                }
+            ],
+            "date": 1711797742435,
+            "name": "Commit-0",
+            "content": "--\n"
+        }
+    ]
+}
