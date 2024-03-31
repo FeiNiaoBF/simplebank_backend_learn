@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 8,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1711798351500,
@@ -40,6 +40,10 @@
                 {
                     "date": 1711798545327,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,8 @@\n WHERE id = $1 LIMIT 1;\n \n -- name: ListTransfers :many\n SELECT * FROM transfers\n-WHERE from_account_id = $1 OR to_account_id = $1\n-WHERE account_id = $1\n+WHERE from_account_id = $1 OR to_account_id = $2\n ORDER BY id\n LIMIT $2\n OFFSET &3;\n"
+                },
+                {
+                    "date": 1711876030684,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,6 +14,6 @@\n -- name: ListTransfers :many\n SELECT * FROM transfers\n WHERE from_account_id = $1 OR to_account_id = $2\n ORDER BY id\n-LIMIT $2\n-OFFSET &3;\n+LIMIT $3\n+OFFSET $4;\n"
                 }
             ],
             "date": 1711798351499,

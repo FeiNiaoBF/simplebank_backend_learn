@@ -1,0 +1,134 @@
+{
+    "sourceFile": "db/sqlc/transfer_test.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 29,
+            "patches": [
+                {
+                    "date": 1711872598736,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711875544245,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,82 @@\n package db\n \n+import (\n+\t\"context\"\n+\t\"testing\"\n+\t\"time\"\n+\n+\t\"github.com/FeiNiaoBF/simplebank/util\"\n+\t\"github.com/stretchr/testify/require\"\n+)\n+\n+func createRandomEntry(t *testing.T, account Account) Entry {\n+\tt.Helper()\n+\targ := CreateEntryParams{\n+\t\tAccountID: account.ID,\n+\t\tAmount:    util.RandomAmount(),\n+\t}\n+\t// Create a random account\n+\tentry, err := testQueries.CreateEntry(context.Background(), arg)\n+\t// Check if there is an error\n+\trequire.NoError(t, err)\n+\trequire.NotEmpty(t, entry)\n+\n+\trequire.Equal(t, arg.AccountID, entry.AccountID)\n+\trequire.Equal(t, arg.Amount, entry.Amount)\n+\n+\trequire.NotZero(t, entry.ID)\n+\trequire.NotZero(t, entry.CreatedAt)\n+\n+\treturn entry\n+}\n+\n+// TestCreateEntry tests the CreateEntry function\n+func TestCreateEntry(t *testing.T) {\n+\taccount := createRandomAccount(t)\n+\tcreateRandomEntry(t, account)\n+}\n+\n+// TestGetEntry tests the GetEntry function\n+func TestGetEntry(t *testing.T) {\n+\taccount := createRandomAccount(t)\n+\tgotE := createRandomEntry(t, account)\n+\n+\twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n+\n+\trequire.NoError(t, err)\n+\trequire.NotEmpty(t, wantE)\n+\n+\trequire.Equal(t, gotE.ID, wantE.ID)\n+\trequire.Equal(t, gotE.AccountID, wantE.AccountID)\n+\trequire.Equal(t, gotE.Amount, wantE.Amount)\n+\trequire.WithinDuration(t, gotE.CreatedAt, wantE.CreatedAt, time.Second)\n+}\n+\n+// TestListEntries tests the ListEntries function\n+func TestListEntries(t *testing.T) {\n+\tconst (\n+\t\tn      = 10\n+\t\tlimit  = 5\n+\t\toffset = 5\n+\t)\n+\n+\taccount := createRandomAccount(t)\n+\tfor i := 0; i < n; i++ {\n+\t\tcreateRandomEntry(t, account)\n+\t}\n+\n+\targs := ListEntriesParams{\n+\t\tAccountID: account.ID,\n+\t\tLimit:     limit,\n+\t\tOffset:    offset,\n+\t}\n+\n+\tentries, err := testQueries.ListEntries(context.Background(), args)\n+\trequire.NoError(t, err)\n+\trequire.Len(t, entries, limit)\n+\n+\tfor _, entry := range entries {\n+\t\trequire.NotEmpty(t, entry)\n+\t\trequire.Equal(t, args.AccountID, entry.AccountID)\n+\t}\n+}\n"
+                },
+                {
+                    "date": 1711875552061,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomEntry(t *testing.T, account Account) Entry {\n+func createRandom(t *testing.T, account Account) Entry {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n"
+                },
+                {
+                    "date": 1711875558772,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandom(t *testing.T, account Account) Entry {\n+func createRandomTrans(t *testing.T, account Account) Entry {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n"
+                },
+                {
+                    "date": 1711875569198,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomTrans(t *testing.T, account Account) Entry {\n+func createRandomTransfer(t *testing.T, account Account) Entry {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n@@ -32,9 +32,9 @@\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n-\tcreateRandomEntry(t, account)\n+\tcreateRandomTransfer(t, account)\n }\n \n // TestGetEntry tests the GetEntry function\n func TestGetEntry(t *testing.T) {\n"
+                },
+                {
+                    "date": 1711875603517,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,9 @@\n )\n \n func createRandomTransfer(t *testing.T, account Account) Entry {\n \tt.Helper()\n-\targ := CreateEntryParams{\n+\targ := CreateTransferParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n \t}\n \t// Create a random account\n@@ -38,9 +38,9 @@\n \n // TestGetEntry tests the GetEntry function\n func TestGetEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n-\tgotE := createRandomEntry(t, account)\n+\tgotE := createRandomTransfer(t, account)\n \n \twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n \n \trequire.NoError(t, err)\n@@ -61,9 +61,9 @@\n \t)\n \n \taccount := createRandomAccount(t)\n \tfor i := 0; i < n; i++ {\n-\t\tcreateRandomEntry(t, account)\n+\t\tcreateRandomTransfer(t, account)\n \t}\n \n \targs := ListEntriesParams{\n \t\tAccountID: account.ID,\n"
+                },
+                {
+                    "date": 1711875629861,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomTransfer(t *testing.T, account Account) Entry {\n+func createRandomTransfer(t *testing.T, fromAccount Account) Entry {\n \tt.Helper()\n \targ := CreateTransferParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n"
+                },
+                {
+                    "date": 1711875635437,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomTransfer(t *testing.T, fromAccount Account) Entry {\n+func createRandomTransfer(t *testing.T, fromAccount, ToAccountID Account) Entry {\n \tt.Helper()\n \targ := CreateTransferParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n"
+                },
+                {
+                    "date": 1711875643700,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,12 +8,12 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomTransfer(t *testing.T, fromAccount, ToAccountID Account) Entry {\n+func createRandomTransfer(t *testing.T, fromAccount, ToAccount Account) Entry {\n \tt.Helper()\n \targ := CreateTransferParams{\n-\t\tAccountID: account.ID,\n+\t\tfo\n \t\tAmount:    util.RandomAmount(),\n \t}\n \t// Create a random account\n \tentry, err := testQueries.CreateEntry(context.Background(), arg)\n"
+                },
+                {
+                    "date": 1711875649924,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,10 @@\n \n func createRandomTransfer(t *testing.T, fromAccount, ToAccount Account) Entry {\n \tt.Helper()\n \targ := CreateTransferParams{\n-\t\tfo\n+\t\tFromAccountID: fromAccount.ID,\n+\t\tToAccountID: ,\n \t\tAmount:    util.RandomAmount(),\n \t}\n \t// Create a random account\n \tentry, err := testQueries.CreateEntry(context.Background(), arg)\n"
+                },
+                {
+                    "date": 1711875686592,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,13 +12,13 @@\n func createRandomTransfer(t *testing.T, fromAccount, ToAccount Account) Entry {\n \tt.Helper()\n \targ := CreateTransferParams{\n \t\tFromAccountID: fromAccount.ID,\n-\t\tToAccountID: ,\n-\t\tAmount:    util.RandomAmount(),\n+\t\tToAccountID:   ToAccount.ID,\n+\t\tAmount:        util.RandomAmount(),\n \t}\n \t// Create a random account\n-\tentry, err := testQueries.CreateEntry(context.Background(), arg)\n+\tentry, err := testQueries.CreateTransfer(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry)\n \n"
+                },
+                {
+                    "date": 1711875720983,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n \t\tToAccountID:   ToAccount.ID,\n \t\tAmount:        util.RandomAmount(),\n \t}\n \t// Create a random account\n-\tentry, err := testQueries.CreateTransfer(context.Background(), arg)\n+\ttr, err := testQueries.CreateTransfer(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry)\n \n"
+                },
+                {
+                    "date": 1711875730253,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,12 +16,12 @@\n \t\tToAccountID:   ToAccount.ID,\n \t\tAmount:        util.RandomAmount(),\n \t}\n \t// Create a random account\n-\ttr, err := testQueries.CreateTransfer(context.Background(), arg)\n+\ttransfer, err := testQueries.CreateTransfer(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n-\trequire.NotEmpty(t, entry)\n+\trequire.NotEmpty(t, transfer)\n \n \trequire.Equal(t, arg.AccountID, entry.AccountID)\n \trequire.Equal(t, arg.Amount, entry.Amount)\n \n"
+                },
+                {
+                    "date": 1711875736747,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, transfer)\n \n-\trequire.Equal(t, arg.AccountID, entry.AccountID)\n+\trequire.Equal(t, arg.ToAccountID, entry.AccountID)\n \trequire.Equal(t, arg.Amount, entry.Amount)\n \n \trequire.NotZero(t, entry.ID)\n \trequire.NotZero(t, entry.CreatedAt)\n"
+                },
+                {
+                    "date": 1711875742947,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, transfer)\n \n-\trequire.Equal(t, arg.ToAccountID, entry.AccountID)\n+\trequire.Equal(t, arg.ToAccountID, )\n \trequire.Equal(t, arg.Amount, entry.Amount)\n \n \trequire.NotZero(t, entry.ID)\n \trequire.NotZero(t, entry.CreatedAt)\n"
+                },
+                {
+                    "date": 1711875750653,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, transfer)\n \n-\trequire.Equal(t, arg.ToAccountID, )\n+\trequire.Equal(t, arg.ToAccountID, transfer.ToAccountID)\n \trequire.Equal(t, arg.Amount, entry.Amount)\n \n \trequire.NotZero(t, entry.ID)\n \trequire.NotZero(t, entry.CreatedAt)\n"
+                },
+                {
+                    "date": 1711875757471,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,9 @@\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, transfer)\n \n+\trequire.Equal(t, arg.ToAccountID, transfer.frAccountID)\n \trequire.Equal(t, arg.ToAccountID, transfer.ToAccountID)\n \trequire.Equal(t, arg.Amount, entry.Amount)\n \n \trequire.NotZero(t, entry.ID)\n"
+                },
+                {
+                    "date": 1711875767344,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,11 +21,11 @@\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, transfer)\n \n-\trequire.Equal(t, arg.ToAccountID, transfer.frAccountID)\n+\trequire.Equal(t, arg.FromAccountID, transfer.FromAccountID)\n \trequire.Equal(t, arg.ToAccountID, transfer.ToAccountID)\n-\trequire.Equal(t, arg.Amount, entry.Amount)\n+\trequire.Equal(t, arg.Amount, transfer.Amount)\n \n \trequire.NotZero(t, entry.ID)\n \trequire.NotZero(t, entry.CreatedAt)\n \n"
+                },
+                {
+                    "date": 1711875777339,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,10 +25,10 @@\n \trequire.Equal(t, arg.FromAccountID, transfer.FromAccountID)\n \trequire.Equal(t, arg.ToAccountID, transfer.ToAccountID)\n \trequire.Equal(t, arg.Amount, transfer.Amount)\n \n-\trequire.NotZero(t, entry.ID)\n-\trequire.NotZero(t, entry.CreatedAt)\n+\trequire.NotZero(t, transfer.ID)\n+\trequire.NotZero(t, transfer.CreatedAt)\n \n \treturn entry\n }\n \n"
+                },
+                {
+                    "date": 1711875787753,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n \n \trequire.NotZero(t, transfer.ID)\n \trequire.NotZero(t, transfer.CreatedAt)\n \n-\treturn entry\n+\treturn transfer\n }\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n"
+                },
+                {
+                    "date": 1711875794823,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomTransfer(t *testing.T, fromAccount, ToAccount Account) Entry {\n+func createRandomTransfer(t *testing.T, fromAccount, ToAccount Account) Transfer {\n \tt.Helper()\n \targ := CreateTransferParams{\n \t\tFromAccountID: fromAccount.ID,\n \t\tToAccountID:   ToAccount.ID,\n"
+                },
+                {
+                    "date": 1711875808636,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \n \treturn transfer\n }\n \n-// TestCreateEntry tests the CreateEntry function\n+// TestCreateTransfer tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tcreateRandomTransfer(t, account)\n }\n"
+                },
+                {
+                    "date": 1711875823353,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,11 +31,11 @@\n \n \treturn transfer\n }\n \n-// TestCreateTransfer tests the CreateEntry function\n-func TestCreateEntry(t *testing.T) {\n-\taccount := createRandomAccount(t)\n+// TestCreateTransfer tests the CreateTransfer function\n+func TestCreateTransfery(t *testing.T) {\n+\tfromAccount := createRandomAccount(t)\n \tcreateRandomTransfer(t, account)\n }\n \n // TestGetEntry tests the GetEntry function\n"
+                },
+                {
+                    "date": 1711875828735,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,8 +34,9 @@\n \n // TestCreateTransfer tests the CreateTransfer function\n func TestCreateTransfery(t *testing.T) {\n \tfromAccount := createRandomAccount(t)\n+\ttoAccount\n \tcreateRandomTransfer(t, account)\n }\n \n // TestGetEntry tests the GetEntry function\n"
+                },
+                {
+                    "date": 1711875839749,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,10 +34,10 @@\n \n // TestCreateTransfer tests the CreateTransfer function\n func TestCreateTransfery(t *testing.T) {\n \tfromAccount := createRandomAccount(t)\n-\ttoAccount\n-\tcreateRandomTransfer(t, account)\n+\ttoAccount := createRandomAccount(t)\n+\tcreateRandomTransfer(t, fromAccount, toAccount)\n }\n \n // TestGetEntry tests the GetEntry function\n func TestGetEntry(t *testing.T) {\n"
+                },
+                {
+                    "date": 1711875850665,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -39,9 +39,9 @@\n \tcreateRandomTransfer(t, fromAccount, toAccount)\n }\n \n // TestGetEntry tests the GetEntry function\n-func TestGetEntry(t *testing.T) {\n+func TestGetTransfer(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tgotE := createRandomTransfer(t, account)\n \n \twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n"
+                },
+                {
+                    "date": 1711875855863,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,9 +38,9 @@\n \ttoAccount := createRandomAccount(t)\n \tcreateRandomTransfer(t, fromAccount, toAccount)\n }\n \n-// TestGetEntry tests the GetEntry function\n+// TestGetTransfer tests the GetTransfer function\n func TestGetTransfer(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tgotE := createRandomTransfer(t, account)\n \n"
+                },
+                {
+                    "date": 1711875862755,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,11 @@\n }\n \n // TestGetTransfer tests the GetTransfer function\n func TestGetTransfer(t *testing.T) {\n-\taccount := createRandomAccount(t)\n+\tfromAccount := createRandomAccount(t)\n+\ttoAccount := createRandomAccount(t)\n+\tcreateRandomTransfer(t, fromAccount, toAccount)\n \tgotE := createRandomTransfer(t, account)\n \n \twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n \n"
+                },
+                {
+                    "date": 1711875871103,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,8 @@\n func TestGetTransfer(t *testing.T) {\n \tfromAccount := createRandomAccount(t)\n \ttoAccount := createRandomAccount(t)\n \tcreateRandomTransfer(t, fromAccount, toAccount)\n-\tgotE\n \n \twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n \n \trequire.NoError(t, err)\n"
+                },
+                {
+                    "date": 1711876050027,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -73,9 +73,9 @@\n \targs := ListTransfersParams{\n \t\tFromAccountID: fromAccount.ID,\n \t\tToAccountID:   toAccount.ID,\n \t\tLimit:         limit,\n-\t\t\n+\t\tOffset:        offset,\n \t}\n \n \tentries, err := testQueries.ListEntries(context.Background(), args)\n \trequire.NoError(t, err)\n"
+                }
+            ],
+            "date": 1711872598736,
+            "name": "Commit-0",
+            "content": "package db\n\n"
+        }
+    ]
+}

@@ -1,0 +1,78 @@
+{
+    "sourceFile": "db/sqlc/account_test.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 15,
+            "patches": [
+                {
+                    "date": 1711853887940,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711860095131,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,2 @@\n package db\n+\n"
+                },
+                {
+                    "date": 1711860103287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,3 @@\n package db\n \n+func TestCreate\n"
+                },
+                {
+                    "date": 1711860110374,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n package db\n \n-func TestCreate\n+func TestCreateAccount(t *testing)\n"
+                },
+                {
+                    "date": 1711860116610,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n package db\n \n-func TestCreateAccount(t *testing)\n+func TestCreateAccount(t *testing.T) {}\n"
+                },
+                {
+                    "date": 1711860125642,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,7 @@\n package db\n \n-func TestCreateAccount(t *testing.T) {}\n+import \"testing\"\n+\n+func TestCreateAccount(t *testing.T) {\n+\t\n+}\n"
+                },
+                {
+                    "date": 1711865097462,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,6 +2,6 @@\n \n import \"testing\"\n \n func TestCreateAccount(t *testing.T) {\n-\t\n+\targ := createAccount\n }\n"
+                },
+                {
+                    "date": 1711865124961,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,6 +2,8 @@\n \n import \"testing\"\n \n func TestCreateAccount(t *testing.T) {\n-\targ := createAccount\n+\targ := CreateAccountParams{\n+\t\t\n+\t}\n }\n"
+                },
+                {
+                    "date": 1711865135281,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,7 +3,7 @@\n import \"testing\"\n \n func TestCreateAccount(t *testing.T) {\n \targ := CreateAccountParams{\n-\t\t\n+\t\tOwner: \"tom\",\n \t}\n }\n"
+                },
+                {
+                    "date": 1711865141548,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,6 +4,8 @@\n \n func TestCreateAccount(t *testing.T) {\n \targ := CreateAccountParams{\n \t\tOwner: \"tom\",\n+\t\tBalance: 100,\n+\t\t\n \t}\n }\n"
+                },
+                {
+                    "date": 1711865149048,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,7 +5,9 @@\n func TestCreateAccount(t *testing.T) {\n \targ := CreateAccountParams{\n \t\tOwner: \"tom\",\n \t\tBalance: 100,\n-\t\t\n+\t\tCurrency: \"USD\",\n \t}\n+\n+\tacc\n }\n"
+                },
+                {
+                    "date": 1711865155262,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,6 +8,6 @@\n \t\tBalance: 100,\n \t\tCurrency: \"USD\",\n \t}\n \n-\tacc\n+\taccount, err :== \n }\n"
+                },
+                {
+                    "date": 1711865172997,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,6 +8,6 @@\n \t\tBalance: 100,\n \t\tCurrency: \"USD\",\n \t}\n \n-\taccount, err :== \n+\taccount, err := te\n }\n"
+                },
+                {
+                    "date": 1711865179648,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,6 +8,6 @@\n \t\tBalance: 100,\n \t\tCurrency: \"USD\",\n \t}\n \n-\taccount, err := te\n+\taccount, err := testQueries.CreateAccount(con)\n }\n"
+                },
+                {
+                    "date": 1711865187854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,6 +11,6 @@\n \t\tBalance: 100,\n \t\tCurrency: \"USD\",\n \t}\n \n-\taccount, err := testQueries.CreateAccount(context.Background(), )\n+\taccount, err := testQueries.CreateAccount(context.Background(), arg)\n }\n"
+                },
+                {
+                    "date": 1711865491972,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,6 +15,6 @@\n \t}\n \n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \n-\trequire.NO\n+\trequire.NoError()\n }\n"
+                }
+            ],
+            "date": 1711853887940,
+            "name": "Commit-0",
+            "content": "package db\n"
+        }
+    ]
+}

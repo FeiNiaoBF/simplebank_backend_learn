@@ -1,0 +1,258 @@
+{
+    "sourceFile": "db/sqlc/entry_test.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 60,
+            "patches": [
+                {
+                    "date": 1711872279738,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711872688025,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,3 @@\n package db\n \n+// \n"
+                },
+                {
+                    "date": 1711872704780,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n package db\n \n-// \n+/\n"
+                },
+                {
+                    "date": 1711872728703,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n package db\n \n-/\n+// TestCreateEntry\n"
+                },
+                {
+                    "date": 1711872734784,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,4 @@\n package db\n \n-// TestCreateEntry\n+// TestCreateEntry tests the CreateEntry function\n+\n"
+                },
+                {
+                    "date": 1711872740351,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,4 @@\n package db\n \n // TestCreateEntry tests the CreateEntry function\n-\n+func TestC\n"
+                },
+                {
+                    "date": 1711872747130,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,4 @@\n package db\n \n // TestCreateEntry tests the CreateEntry function\n-func TestC\n+func TestCreateEntry(t *testing)\n"
+                },
+                {
+                    "date": 1711872758286,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,8 @@\n package db\n \n+import \"testing\"\n+\n // TestCreateEntry tests the CreateEntry function\n-func TestCreateEntry(t *testing)\n+func TestCreateEntry(t *testing.T) {\n+\tcreateRandomEntry(t)\n+}\n"
+                },
+                {
+                    "date": 1711872764530,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,6 +3,7 @@\n import \"testing\"\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n+\tacc\n \tcreateRandomEntry(t)\n }\n"
+                },
+                {
+                    "date": 1711872771476,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,7 +3,7 @@\n import \"testing\"\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n-\tacc\n+\taccount := createAccount\n \tcreateRandomEntry(t)\n }\n"
+                },
+                {
+                    "date": 1711872777963,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,7 +3,7 @@\n import \"testing\"\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n-\taccount := createAccount\n-\tcreateRandomEntry(t)\n+\taccount := createAccount(t)\n+\tcreateRandomEntry(t, account)\n }\n"
+                },
+                {
+                    "date": 1711872792865,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,4 +6,8 @@\n func TestCreateEntry(t *testing.T) {\n \taccount := createAccount(t)\n \tcreateRandomEntry(t, account)\n }\n+\n+func createRandomEntry(t *testing.T, account invalid type) {\n+\tpanic(\"unimplemented\")\n+}\n"
+                },
+                {
+                    "date": 1711872805172,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,13 @@\n package db\n \n import \"testing\"\n \n+func createRandomEntry(t *testing.T, account Account) {\n+\tpanic(\"unimplemented\")\n+}\n+\n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n \taccount := createAccount(t)\n \tcreateRandomEntry(t, account)\n }\n-\n-func createRandomEntry(t *testing.T, account invalid type) {\n-\tpanic(\"unimplemented\")\n-}\n"
+                },
+                {
+                    "date": 1711872850160,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,7 +7,7 @@\n }\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n-\taccount := createAccount(t)\n+\taccount := createRAccount(t)\n \tcreateRandomEntry(t, account)\n }\n"
+                },
+                {
+                    "date": 1711872855534,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,9 @@\n \n import \"testing\"\n \n func createRandomEntry(t *testing.T, account Account) {\n-\tpanic(\"unimplemented\")\n+\t\n }\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n"
+                },
+                {
+                    "date": 1711872866729,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,28 @@\n \n import \"testing\"\n \n func createRandomEntry(t *testing.T, account Account) {\n-\t\n+\tt.Helper()\n+\targ := CreateAccountParams{\n+\t\tOwner:    util.RandomOwner(),\n+\t\tBalance:  util.RandomMoney(),\n+\t\tCurrency: util.RandomCurrency(),\n+\t}\n+\t// Create a random account\n+\taccount, err := testQueries.CreateAccount(context.Background(), arg)\n+\t// Check if there is an error\n+\trequire.NoError(t, err)\n+\trequire.NotEmpty(t, account)\n+\t// Check if the account is the same as the argument\n+\trequire.Equal(t, arg.Owner, account.Owner)\n+\trequire.Equal(t, arg.Balance, account.Balance)\n+\trequire.Equal(t, arg.Currency, account.Currency)\n+\t// Check if the account has an ID and CreatedAt\n+\trequire.NotZero(t, account.ID)\n+\trequire.NotZero(t, account.CreatedAt)\n+\n+\treturn account\n }\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n"
+                },
+                {
+                    "date": 1711872872257,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,11 +4,9 @@\n \n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateAccountParams{\n-\t\tOwner:    util.RandomOwner(),\n-\t\tBalance:  util.RandomMoney(),\n-\t\tCurrency: util.RandomCurrency(),\n+\n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \t// Check if there is an error\n@@ -26,7 +24,7 @@\n }\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n-\taccount := createRAccount(t)\n+\taccount := createRandomAccount(t)\n \tcreateRandomEntry(t, account)\n }\n"
+                },
+                {
+                    "date": 1711872880062,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import \"testing\"\n \n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n-\targ := CreateAccountParams{\n+\targ := CreateEntryParams{\n \n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n"
+                },
+                {
+                    "date": 1711872889580,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,10 @@\n \n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateEntryParams{\n-\n+\t\tAccountID: account.ID,\n+\t\tAmo\n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \t// Check if there is an error\n"
+                },
+                {
+                    "date": 1711872895764,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n-\t\tAmo\n+\t\tAmount: u\n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \t// Check if there is an error\n"
+                },
+                {
+                    "date": 1711872902234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n-\t\tAmount: u\n+\t\tAmount: util.\n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \t// Check if there is an error\n"
+                },
+                {
+                    "date": 1711872907737,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,17 @@\n package db\n \n-import \"testing\"\n+import (\n+\t\"testing\"\n \n+\t\"github.com/FeiNiaoBF/simplebank/util\"\n+)\n+\n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n-\t\tAmount: util.\n+\t\tAmount: util.RandomMoney(),\n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \t// Check if there is an error\n"
+                },
+                {
+                    "date": 1711873256055,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n-\t\tAmount: util.RandomMoney(),\n+\t\tAmount: util.RandomAmount\n \t}\n \t// Create a random account\n \taccount, err := testQueries.CreateAccount(context.Background(), arg)\n \t// Check if there is an error\n"
+                },
+                {
+                    "date": 1711873270058,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,12 +9,12 @@\n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n-\t\tAmount: util.RandomAmount\n+\t\tAmount:    util.RandomAmount(),\n \t}\n \t// Create a random account\n-\taccount, err := testQueries.CreateAccount(context.Background(), arg)\n+\taccount, err := testQueries.CreateEntry(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, account)\n \t// Check if the account is the same as the argument\n"
+                },
+                {
+                    "date": 1711873275354,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n \t}\n \t// Create a random account\n-\taccount, err := testQueries.CreateEntry(context.Background(), arg)\n+\tentery, err := testQueries.CreateEntry(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, account)\n \t// Check if the account is the same as the argument\n"
+                },
+                {
+                    "date": 1711873281150,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n \t}\n \t// Create a random account\n-\tentery, err := testQueries.CreateEntry(context.Background(), arg)\n+\tentry, err := testQueries.CreateEntry(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, account)\n \t// Check if the account is the same as the argument\n"
+                },
+                {
+                    "date": 1711873292538,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n import (\n \t\"testing\"\n \n \t\"github.com/FeiNiaoBF/simplebank/util\"\n+\t\"github.com/stretchr/testify/require\"\n )\n \n func createRandomEntry(t *testing.T, account Account) {\n \tt.Helper()\n@@ -16,13 +17,9 @@\n \tentry, err := testQueries.CreateEntry(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, account)\n-\t// Check if the account is the same as the argument\n-\trequire.Equal(t, arg.Owner, account.Owner)\n-\trequire.Equal(t, arg.Balance, account.Balance)\n-\trequire.Equal(t, arg.Currency, account.Currency)\n-\t// Check if the account has an ID and CreatedAt\n+\n \trequire.NotZero(t, account.ID)\n \trequire.NotZero(t, account.CreatedAt)\n \n \treturn account\n"
+                },
+                {
+                    "date": 1711873299396,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,8 +18,10 @@\n \t// Check if there is an error\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, account)\n \n+\trequire\n+\n \trequire.NotZero(t, account.ID)\n \trequire.NotZero(t, account.CreatedAt)\n \n \treturn account\n"
+                },
+                {
+                    "date": 1711873347602,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,11 +16,11 @@\n \t// Create a random account\n \tentry, err := testQueries.CreateEntry(context.Background(), arg)\n \t// Check if there is an error\n \trequire.NoError(t, err)\n-\trequire.NotEmpty(t, account)\n+\trequire.NotEmpty(t, entry)\n \n-\trequire\n+\trequire.Equal(t, arg.AccountID, entry.AccountID)\n \n \trequire.NotZero(t, account.ID)\n \trequire.NotZero(t, account.CreatedAt)\n \n"
+                },
+                {
+                    "date": 1711873357657,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,8 +19,9 @@\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry)\n \n \trequire.Equal(t, arg.AccountID, entry.AccountID)\n+\trequire.E\n \n \trequire.NotZero(t, account.ID)\n \trequire.NotZero(t, account.CreatedAt)\n \n"
+                },
+                {
+                    "date": 1711873364011,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry)\n \n \trequire.Equal(t, arg.AccountID, entry.AccountID)\n-\trequire.E\n+\trequire.Equal()\n \n \trequire.NotZero(t, account.ID)\n \trequire.NotZero(t, account.CreatedAt)\n \n"
+                },
+                {
+                    "date": 1711873369618,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry)\n \n \trequire.Equal(t, arg.AccountID, entry.AccountID)\n-\trequire.Equal()\n+\trequire.Equal(t, arg.Amount, entry.Amount)\n \n \trequire.NotZero(t, account.ID)\n \trequire.NotZero(t, account.CreatedAt)\n \n"
+                },
+                {
+                    "date": 1711873379420,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,10 +21,10 @@\n \n \trequire.Equal(t, arg.AccountID, entry.AccountID)\n \trequire.Equal(t, arg.Amount, entry.Amount)\n \n-\trequire.NotZero(t, account.ID)\n-\trequire.NotZero(t, account.CreatedAt)\n+\trequire.NotZero(t, entry.ID)\n+\trequire.NotZero(t, entry.CreatedAt)\n \n \treturn account\n }\n \n"
+                },
+                {
+                    "date": 1711873387048,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomEntry(t *testing.T, account Account) {\n+func createRandomEntry(t *testing.T, account Account)  {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n@@ -24,9 +24,9 @@\n \n \trequire.NotZero(t, entry.ID)\n \trequire.NotZero(t, entry.CreatedAt)\n \n-\treturn account\n+\treturn entry\n }\n \n // TestCreateEntry tests the CreateEntry function\n func TestCreateEntry(t *testing.T) {\n"
+                },
+                {
+                    "date": 1711873392561,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomEntry(t *testing.T, account Account)  {\n+func createRandomEntry(t *testing.T, account Account) En {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n"
+                },
+                {
+                    "date": 1711873400900,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,15 @@\n package db\n \n import (\n+\t\"context\"\n \t\"testing\"\n \n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n \n-func createRandomEntry(t *testing.T, account Account) En {\n+func createRandomEntry(t *testing.T, account Account) Entry {\n \tt.Helper()\n \targ := CreateEntryParams{\n \t\tAccountID: account.ID,\n \t\tAmount:    util.RandomAmount(),\n"
+                },
+                {
+                    "date": 1711873414467,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -33,4 +33,6 @@\n func TestCreateEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tcreateRandomEntry(t, account)\n }\n+\n+// Test\n"
+                },
+                {
+                    "date": 1711873421148,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,5 +34,7 @@\n \taccount := createRandomAccount(t)\n \tcreateRandomEntry(t, account)\n }\n \n-// Test\n+// TestGetEntry tests the GetEntry function\n+\n+// TestListEntries tests the ListEntries function\n"
+                },
+                {
+                    "date": 1711873448668,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,5 +36,6 @@\n }\n \n // TestGetEntry tests the GetEntry function\n \n+\n // TestListEntries tests the ListEntries function\n"
+                },
+                {
+                    "date": 1711873456343,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,7 +35,9 @@\n \tcreateRandomEntry(t, account)\n }\n \n // TestGetEntry tests the GetEntry function\n+func TestGetEntry(t *testing.T) {\n+\t\n+}\n \n-\n // TestListEntries tests the ListEntries function\n"
+                },
+                {
+                    "date": 1711873486489,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n \n import (\n \t\"context\"\n \t\"testing\"\n+\t\"time\"\n \n \t\"github.com/FeiNiaoBF/simplebank/util\"\n \t\"github.com/stretchr/testify/require\"\n )\n@@ -36,8 +37,19 @@\n }\n \n // TestGetEntry tests the GetEntry function\n func TestGetEntry(t *testing.T) {\n-\t\n+\taccount := createRandomAccount(t)\n+\tentry1 := createRandomEntry(t, account)\n+\n+\tentry2, err := testQueries.GetEntry(context.Background(), entry1.ID)\n+\trequire.NoError(t, err)\n+\trequire.NotEmpty(t, entry2)\n+\n+\trequire.Equal(t, entry1.ID, entry2.ID)\n+\trequire.Equal(t, entry1.AccountID, entry2.AccountID)\n+\trequire.Equal(t, entry1.Amount, entry2.Amount)\n+\trequire.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)\n+\n }\n \n // TestListEntries tests the ListEntries function\n"
+                },
+                {
+                    "date": 1711873495316,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,9 +38,9 @@\n \n // TestGetEntry tests the GetEntry function\n func TestGetEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n-\tentry1 := createRandomEntry(t, account)\n+\tgot := createRandomEntry(t, account)\n \n \tentry2, err := testQueries.GetEntry(context.Background(), entry1.ID)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry2)\n"
+                },
+                {
+                    "date": 1711873505030,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,11 +38,11 @@\n \n // TestGetEntry tests the GetEntry function\n func TestGetEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n-\tgot := createRandomEntry(t, account)\n+\tgotE := createRandomEntry(t, account)\n \n-\tentry2, err := testQueries.GetEntry(context.Background(), entry1.ID)\n+\twantE, err := testQueries.GetEntry(context.Background(), entry1.ID)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry2)\n \n \trequire.Equal(t, entry1.ID, entry2.ID)\n"
+                },
+                {
+                    "date": 1711873574562,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n func TestGetEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tgotE := createRandomEntry(t, account)\n \n-\twantE, err := testQueries.GetEntry(context.Background(), entry1.ID)\n+\twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry2)\n \n \trequire.Equal(t, entry1.ID, entry2.ID)\n"
+                },
+                {
+                    "date": 1711873598309,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n func TestGetEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tgotE := createRandomEntry(t, account)\n \n-\twantE, err := testQueries.GetEntry(context.Background(), gotE.ID)\n+\twantE, err := testQueries.GetEntry(context.Background(), gotE.Acco)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, entry2)\n \n \trequire.Equal(t, entry1.ID, entry2.ID)\n"
+                },
+                {
+                    "date": 1711873615653,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,11 +40,11 @@\n func TestGetEntry(t *testing.T) {\n \taccount := createRandomAccount(t)\n \tgotE := createRandomEntry(t, account)\n \n-\twantE, err := testQueries.GetEntry(context.Background(), gotE.Acco)\n+\twantE, err := testQueries.GetEntry(context.Background(), gotE.AccountID)\n \trequire.NoError(t, err)\n-\trequire.NotEmpty(t, entry2)\n+\trequire.NotEmpty(t, wantE)\n \n \trequire.Equal(t, entry1.ID, entry2.ID)\n \trequire.Equal(t, entry1.AccountID, entry2.AccountID)\n \trequire.Equal(t, entry1.Amount, entry2.Amount)\n"
+                },
+                {
+                    "date": 1711873647674,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,9 +44,9 @@\n \twantE, err := testQueries.GetEntry(context.Background(), gotE.AccountID)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, wantE)\n \n-\trequire.Equal(t, entry1.ID, entry2.ID)\n+\trequire.Equal(t, .ID, entry2.ID)\n \trequire.Equal(t, entry1.AccountID, entry2.AccountID)\n \trequire.Equal(t, entry1.Amount, entry2.Amount)\n \trequire.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)\n \n"
+                },
+                {
+                    "date": 1711873654946,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,9 +44,9 @@\n \twantE, err := testQueries.GetEntry(context.Background(), gotE.AccountID)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, wantE)\n \n-\trequire.Equal(t, .ID, entry2.ID)\n+\trequire.Equal(t, gotE.ID, .ID)\n \trequire.Equal(t, entry1.AccountID, entry2.AccountID)\n \trequire.Equal(t, entry1.Amount, entry2.Amount)\n \trequire.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)\n \n"
+                },
+                {
+                    "date": 1711873665456,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,10 +44,10 @@\n \twantE, err := testQueries.GetEntry(context.Background(), gotE.AccountID)\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, wantE)\n \n-\trequire.Equal(t, gotE.ID, .ID)\n-\trequire.Equal(t, entry1.AccountID, entry2.AccountID)\n+\trequire.Equal(t, gotE.ID, wantE.ID)\n+\trequire.Equal(t, gotE.AccountID, entry2.AccountID)\n \trequire.Equal(t, entry1.Amount, entry2.Amount)\n \trequire.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)\n \n }\n"
+                },
+                {
+                    "date": 1711873675490,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,10 +45,10 @@\n \trequire.NoError(t, err)\n \trequire.NotEmpty(t, wantE)\n \n \trequire.Equal(t, gotE.ID, wantE.ID)\n-\trequire.Equal(t, gotE.AccountID, entry2.AccountID)\n-\trequire.Equal(t, entry1.Amount, entry2.Amount)\n+\trequire.Equal(t, gotE.AccountID, wantE.AccountID)\n+\trequire.Equal(t, gotE.Amount, entry2.Amount)\n \trequire.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)\n \n }\n \n"
+                },
+                {
+                    "date": 1711873683658,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -46,10 +46,10 @@\n \trequire.NotEmpty(t, wantE)\n \n \trequire.Equal(t, gotE.ID, wantE.ID)\n \trequire.Equal(t, gotE.AccountID, wantE.AccountID)\n-\trequire.Equal(t, gotE.Amount, entry2.Amount)\n-\trequire.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)\n+\trequire.Equal(t, gotE.Amount, wantE.Amount)\n+\trequire.WithinDuration(t, gotE.CreatedAt, entry2.CreatedAt, time.Second)\n \n }\n \n // TestListEntries tests the ListEntries function\n"
+                },
+                {
+                    "date": 1711873690573,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -47,9 +47,9 @@\n \n \trequire.Equal(t, gotE.ID, wantE.ID)\n \trequire.Equal(t, gotE.AccountID, wantE.AccountID)\n \trequire.Equal(t, gotE.Amount, wantE.Amount)\n-\trequire.WithinDuration(t, gotE.CreatedAt, entry2.CreatedAt, time.Second)\n+\trequire.WithinDuration(t, gotE.CreatedAt, wantE.CreatedAt, time.Second)\n \n }\n \n // TestListEntries tests the ListEntries function\n"
+                },
+                {
+                    "date": 1711873718520,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,8 +48,8 @@\n \trequire.Equal(t, gotE.ID, wantE.ID)\n \trequire.Equal(t, gotE.AccountID, wantE.AccountID)\n \trequire.Equal(t, gotE.Amount, wantE.Amount)\n \trequire.WithinDuration(t, gotE.CreatedAt, wantE.CreatedAt, time.Second)\n-\n }\n \n // TestListEntries tests the ListEntries function\n+func T\n"
+                },
+                {
+                    "date": 1711873729027,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -51,5 +51,7 @@\n \trequire.WithinDuration(t, gotE.CreatedAt, wantE.CreatedAt, time.Second)\n }\n \n // TestListEntries tests the ListEntries function\n-func T\n+func TestListAccounts(t *testing.T) {\n+\t\n+}\n"
+                },
+                {
+                    "date": 1711873739477,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -51,7 +51,7 @@\n \trequire.WithinDuration(t, gotE.CreatedAt, wantE.CreatedAt, time.Second)\n }\n \n // TestListEntries tests the ListEntries function\n-func TestListAccounts(t *testing.T) {\n+func TestListEntries(t *testing.T) {\n \t\n }\n"
+                },
+                {
+                    "date": 1711873745332,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,6 +52,6 @@\n }\n \n // TestListEntries tests the ListEntries function\n func TestListEntries(t *testing.T) {\n-\t\n+\taccount := \n }\n"
+                },
+                {
+                    "date": 1711873750520,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,6 +52,6 @@\n }\n \n // TestListEntries tests the ListEntries function\n func TestListEntries(t *testing.T) {\n-\taccount := \n+\taccount := createRandomAccount()\n }\n"
+                },
+                {
+                    "date": 1711873758651,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,6 +52,7 @@\n }\n \n // TestListEntries tests the ListEntries function\n func TestListEntries(t *testing.T) {\n-\taccount := createRandomAccount()\n+\taccount := createRandomAccount(t)\n+\tfor i := 0\n }\n"
+                },
+                {
+                    "date": 1711873773391,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,7 +52,12 @@\n }\n \n // TestListEntries tests the ListEntries function\n func TestListEntries(t *testing.T) {\n+\tconst (\n+\t\tn      = 10\n+\t\tlimit  = 10\n+\t\toffset = 5\n+\t)\n \taccount := createRandomAccount(t)\n-\tfor i := 0\n+\tfor i := 0;\n }\n"
+                },
+                {
+                    "date": 1711873779855,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -59,6 +59,6 @@\n \t\toffset = 5\n \t)\n \n \taccount := createRandomAccount(t)\n-\tfor i := 0; i < \n+\tfor i := 0; i < n\n }\n"
+                },
+                {
+                    "date": 1711873789643,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -60,7 +60,7 @@\n \t)\n \n \taccount := createRandomAccount(t)\n \tfor i := 0; i < n; i++ {\n-\t\t\n+\t\tce\n \t}\n }\n"
+                }
+            ],
+            "date": 1711872279738,
+            "name": "Commit-0",
+            "content": "package db\n\n"
+        }
+    ]
+}

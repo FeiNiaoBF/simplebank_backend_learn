@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1711787077189,
@@ -12,6 +12,14 @@
                 {
                     "date": 1711787671600,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,8 +32,15 @@\n \t\t&i.ID,\n \t\t&i.Owner,\n \t\t&i.Balance,\n \t\t&i.Currency,\n-\t\t&i.CreatedAt,\n+\t\t&i.CreatedAt,-- name: CreateAccount :one\n+\t\tINSERT INTO accounts (\n+\t\t  owner,\n+\t\t  balance,\n+\t\t  currency\n+\t\t) VALUES (\n+\t\t  $1, $2, $3\n+\t\t) RETURNING *;\n \t)\n \treturn i, err\n }\n"
+                },
+                {
+                    "date": 1711872085439,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,15 +32,102 @@\n \t\t&i.ID,\n \t\t&i.Owner,\n \t\t&i.Balance,\n \t\t&i.Currency,\n-\t\t&i.CreatedAt,-- name: CreateAccount :one\n-\t\tINSERT INTO accounts (\n-\t\t  owner,\n-\t\t  balance,\n-\t\t  currency\n-\t\t) VALUES (\n-\t\t  $1, $2, $3\n-\t\t) RETURNING *;\n+\t\t&i.CreatedAt,\n \t)\n \treturn i, err\n }\n+\n+const deleteAccount = `-- name: DeleteAccount :exec\n+DELETE FROM accounts\n+WHERE id = $1\n+`\n+\n+func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {\n+\t_, err := q.db.ExecContext(ctx, deleteAccount, id)\n+\treturn err\n+}\n+\n+const getAccount = `-- name: GetAccount :one\n+SELECT id, owner, balance, currency, created_at FROM accounts\n+WHERE id = $1 LIMIT 1\n+`\n+\n+func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {\n+\trow := q.db.QueryRowContext(ctx, getAccount, id)\n+\tvar i Account\n+\terr := row.Scan(\n+\t\t&i.ID,\n+\t\t&i.Owner,\n+\t\t&i.Balance,\n+\t\t&i.Currency,\n+\t\t&i.CreatedAt,\n+\t)\n+\treturn i, err\n+}\n+\n+const listAccounts = `-- name: ListAccounts :many\n+SELECT id, owner, balance, currency, created_at FROM accounts\n+ORDER BY id\n+LIMIT $1\n+OFFSET $2\n+`\n+\n+type ListAccountsParams struct {\n+\tLimit  int32 `json:\"limit\"`\n+\tOffset int32 `json:\"offset\"`\n+}\n+\n+func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error) {\n+\trows, err := q.db.QueryContext(ctx, listAccounts, arg.Limit, arg.Offset)\n+\tif err != nil {\n+\t\treturn nil, err\n+\t}\n+\tdefer rows.Close()\n+\tvar items []Account\n+\tfor rows.Next() {\n+\t\tvar i Account\n+\t\tif err := rows.Scan(\n+\t\t\t&i.ID,\n+\t\t\t&i.Owner,\n+\t\t\t&i.Balance,\n+\t\t\t&i.Currency,\n+\t\t\t&i.CreatedAt,\n+\t\t); err != nil {\n+\t\t\treturn nil, err\n+\t\t}\n+\t\titems = append(items, i)\n+\t}\n+\tif err := rows.Close(); err != nil {\n+\t\treturn nil, err\n+\t}\n+\tif err := rows.Err(); err != nil {\n+\t\treturn nil, err\n+\t}\n+\treturn items, nil\n+}\n+\n+const updateAccount = `-- name: UpdateAccount :one\n+UPDATE accounts\n+SET balance = $2\n+WHERE id = $1\n+RETURNING id, owner, balance, currency, created_at\n+`\n+\n+type UpdateAccountParams struct {\n+\tID      int64 `json:\"id\"`\n+\tBalance int64 `json:\"balance\"`\n+}\n+\n+func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {\n+\trow := q.db.QueryRowContext(ctx, updateAccount, arg.ID, arg.Balance)\n+\tvar i Account\n+\terr := row.Scan(\n+\t\t&i.ID,\n+\t\t&i.Owner,\n+\t\t&i.Balance,\n+\t\t&i.Currency,\n+\t\t&i.CreatedAt,\n+\t)\n+\treturn i, err\n+}\n"
+                },
+                {
+                    "date": 1711874486954,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tCurrency string `json:\"currency\"`\n }\n \n func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {\n-\trow := q.db.QueryRowContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)\n+\trow := q.db.QueryContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)\n \tvar i Account\n \terr := row.Scan(\n \t\t&i.ID,\n \t\t&i.Owner,\n"
                 }
             ],
             "date": 1711787077189,

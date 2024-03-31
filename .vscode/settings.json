@@ -1,3 +1,11 @@
 {
-    "sqltools.highlightQuery": false
+    "sqltools.highlightQuery": false,
+    "cSpell.words": [
+        "DBTX",
+        "Niao",
+        "simplebank",
+        "sqlc",
+        "sslmode",
+        "stretchr"
+    ]
 }

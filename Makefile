@@ -7,6 +7,8 @@ dropdb:
 	docker exec -it postgres16 dropdb simple_bank
 stop:
 	docker stop postgres16
+start:
+	docker start postgres16
 # migrate up or down
 migrationup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
@@ -17,4 +19,8 @@ migrationdown:
 sqlc:
 	sqlc generate
 
-.PHONY: createdb dropdb postgres migrationdown migrationup sqlc stop
+# go
+test:
+	go test -v -cover ./...
+
+.PHONY: createdb dropdb postgres migrationdown migrationup sqlc stop start test
