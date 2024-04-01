@@ -41,39 +41,50 @@ func TestTransferTx(t *testing.T) {
 		// check results
 		result := <-results
 		require.NotEmpty(t, result)
-
 		// check transfer
-		transfer := result.Transfer
-		require.Equal(t, account1.ID, transfer.FromAccountID)
-		require.Equal(t, account2.ID, transfer.ToAccountID)
-		require.Equal(t, amount, transfer.Amount)
-		require.NotZero(t, transfer.ID)
-		require.NotZero(t, transfer.CreatedAt)
-
-		_, err = store.query.GetTransfer(context.Background(), transfer.ID)
-		require.NoError(t, err)
-
+		assertTransfer(t, store, result, account1, account2, amount)
 		// check entries
-		fromEntry := result.FromEntry
-		require.NotEmpty(t, fromEntry)
-		require.Equal(t, account1.ID, fromEntry.AccountID)
-		require.Equal(t, -amount, fromEntry.Amount)
-		require.NotZero(t, fromEntry.ID)
-		require.NotZero(t, fromEntry.CreatedAt)
-
-		_, err = store.query.GetEntry(context.Background(), fromEntry.ID)
-		require.NoError(t, err)
-
-		toEntry := result.ToEntry
-		require.NotEmpty(t, toEntry)
-		require.Equal(t, account2.ID, toEntry.AccountID)
-		require.Equal(t, amount, toEntry.Amount)
-		require.NotZero(t, toEntry.ID)
-		require.NotZero(t, toEntry.CreatedAt)
-
-		_, err = store.query.GetEntry(context.Background(), toEntry.ID)
-		require.NoError(t, err)
-
+		assertEntries(t, store, result, account1, account2, amount)
 		// TODO: check accounts' balance
 	}
+}
+
+// assertTransfer checks the transfer result
+func assertTransfer(t testing.TB, store *Store, result TransferTxResult, account1, account2 Account, amount int64) {
+	t.Helper()
+	transfer := result.Transfer
+	require.Equal(t, account1.ID, transfer.FromAccountID)
+	require.Equal(t, account2.ID, transfer.ToAccountID)
+	require.Equal(t, amount, transfer.Amount)
+	require.NotZero(t, transfer.ID)
+	require.NotZero(t, transfer.CreatedAt)
+	_, err := store.query.GetTransfer(context.Background(), transfer.ID)
+	require.NoError(t, err)
+}
+
+// assertEntries checks the entries created by the transfer
+func assertEntries(t testing.TB, store *Store, result TransferTxResult, account1, account2 Account, amount int64) {
+	t.Helper()
+	var err error
+	// check the from entry
+	fromEntry := result.FromEntry
+	require.NotEmpty(t, fromEntry)
+	require.Equal(t, account1.ID, fromEntry.AccountID)
+	require.Equal(t, -amount, fromEntry.Amount)
+	require.NotZero(t, fromEntry.ID)
+	require.NotZero(t, fromEntry.CreatedAt)
+
+	_, err = store.query.GetEntry(context.Background(), fromEntry.ID)
+	require.NoError(t, err)
+
+	// check the to entry
+	toEntry := result.ToEntry
+	require.NotEmpty(t, toEntry)
+	require.Equal(t, account2.ID, toEntry.AccountID)
+	require.Equal(t, amount, toEntry.Amount)
+	require.NotZero(t, toEntry.ID)
+	require.NotZero(t, toEntry.CreatedAt)
+
+	_, err = store.query.GetEntry(context.Background(), toEntry.ID)
+	require.NoError(t, err)
 }
