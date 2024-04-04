@@ -16,7 +16,7 @@ func TestTransferTx(t *testing.T) {
 	// fmt.Println(">> before:", account1.Balance, account2.Balance)
 	// run n concurrent transfer transactions
 	var (
-		n       = 2                           // number of concurrent transactions
+		n       = 5                           // number of concurrent transactions
 		amount  = int64(10)                   // amount to money to transfer
 		errs    = make(chan error)            // channel to errors
 		results = make(chan TransferTxResult) // channel to results
@@ -56,6 +56,49 @@ func TestTransferTx(t *testing.T) {
 	assertUpdate(t, account1, account2, amount, n)
 }
 
+func TestTransferTxDeadlock(t *testing.T) {
+	store := NewStore(testDB)
+
+	account1 := createRandomAccount(t)
+	account2 := createRandomAccount(t)
+	fmt.Println(">> before:", account1.Balance, account2.Balance)
+	// run n concurrent transfer transactions
+	var (
+		n      = 10               // number of concurrent transactions
+		amount = int64(10)        // amount to money to transfer
+		errs   = make(chan error) // channel to errors
+	)
+
+	for i := 0; i < n; i++ {
+		txName := fmt.Sprintf("tx %d", i+1)
+		fromAccountId := account1.ID
+		toAccountId := account2.ID
+		if i%2 == 1 {
+			fromAccountId = account2.ID
+			toAccountId = account1.ID
+		}
+
+		go func() {
+			ctx := context.WithValue(context.Background(), txKey, txName)
+			_, err := store.TransferTx(ctx, TransferTxParams{
+				FromAccountID: fromAccountId,
+				ToAccountID:   toAccountId,
+				Amount:        amount,
+			})
+
+			errs <- err
+		}()
+	}
+
+	for i := 0; i < n; i++ {
+		// check errors
+		err := <-errs
+		require.NoError(t, err)
+	}
+	// check account after thr update
+	assertUpdateDeadlock(t, account1, account2)
+}
+
 // assertAccount checks the account result
 func assertAccount(t testing.TB, result TransferTxResult, account1, account2 Account, amount int64, times int) {
 	t.Helper()
@@ -70,7 +113,7 @@ func assertAccount(t testing.TB, result TransferTxResult, account1, account2 Acc
 	require.Equal(t, account2.ID, toAccount.ID)
 
 	// check the difference
-	// fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
+	fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
 	diff1 := account1.Balance - fromAccount.Balance
 	diff2 := toAccount.Balance - account2.Balance
 	require.Equal(t, diff1, diff2)
@@ -132,4 +175,15 @@ func assertUpdate(t testing.TB, account1, account2 Account, amount int64, times 
 	// fmt.Println("<< after:", updateAccount1.Balance, updateAccount2.Balance)
 	require.Equal(t, account1.Balance-int64(times)*amount, updateAccount1.Balance)
 	require.Equal(t, account2.Balance+int64(times)*amount, updateAccount2.Balance)
+}
+
+func assertUpdateDeadlock(t testing.TB, account1, account2 Account) {
+	t.Helper()
+	updateAccount1, err := testQueries.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+	updateAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+	fmt.Println("<< after:", updateAccount1.Balance, updateAccount2.Balance)
+	require.Equal(t, account1.Balance, updateAccount1.Balance)
+	require.Equal(t, account2.Balance, updateAccount2.Balance)
 }
