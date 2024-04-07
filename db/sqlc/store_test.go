@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -23,11 +22,10 @@ func TestTransferTx(t *testing.T) {
 	)
 
 	for i := 0; i < n; i++ {
-		txName := fmt.Sprintf("tx %d", i+1)
+		// txName := fmt.Sprintf("tx %d", i+1)
 
 		go func() {
-			ctx := context.WithValue(context.Background(), txKey, txName)
-			result, err := store.TransferTx(ctx, TransferTxParams{
+			result, err := store.TransferTx(context.Background(), TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
@@ -61,7 +59,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
-	fmt.Println(">> before:", account1.Balance, account2.Balance)
+	// fmt.Println(">> before:", account1.Balance, account2.Balance)
 	// run n concurrent transfer transactions
 	var (
 		n      = 10               // number of concurrent transactions
@@ -70,7 +68,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 	)
 
 	for i := 0; i < n; i++ {
-		txName := fmt.Sprintf("tx %d", i+1)
+
 		fromAccountId := account1.ID
 		toAccountId := account2.ID
 		if i%2 == 1 {
@@ -79,8 +77,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 		}
 
 		go func() {
-			ctx := context.WithValue(context.Background(), txKey, txName)
-			_, err := store.TransferTx(ctx, TransferTxParams{
+			_, err := store.TransferTx(context.Background(), TransferTxParams{
 				FromAccountID: fromAccountId,
 				ToAccountID:   toAccountId,
 				Amount:        amount,
@@ -113,7 +110,6 @@ func assertAccount(t testing.TB, result TransferTxResult, account1, account2 Acc
 	require.Equal(t, account2.ID, toAccount.ID)
 
 	// check the difference
-	fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
 	diff1 := account1.Balance - fromAccount.Balance
 	diff2 := toAccount.Balance - account2.Balance
 	require.Equal(t, diff1, diff2)
@@ -183,7 +179,6 @@ func assertUpdateDeadlock(t testing.TB, account1, account2 Account) {
 	require.NoError(t, err)
 	updateAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
 	require.NoError(t, err)
-	fmt.Println("<< after:", updateAccount1.Balance, updateAccount2.Balance)
 	require.Equal(t, account1.Balance, updateAccount1.Balance)
 	require.Equal(t, account2.Balance, updateAccount2.Balance)
 }
