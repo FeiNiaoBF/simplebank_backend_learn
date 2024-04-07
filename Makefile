@@ -24,6 +24,6 @@ sqlc:
 
 # go
 test:
-	go test -v -cover ./...
+	go test -v -cover -short ./...
 
 .PHONY: createdb dropdb postgres migratedown migrateup sqlc stop start test
