@@ -12,8 +12,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on:
-      ubuntu-latest
+    runs-on: ubuntu-latest
       # Service containers to run with `container-job`
     services:
       # Label used to access the service container
@@ -47,11 +46,12 @@ jobs:
 
       - name: Run migrations
         run: make migrateup
-      # - name: Install golang-migrate
-      #   run: |
-      #     curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
-      #     sudo mv migrate.linux-amd64 /usr/bin/migrate
-      #     which migrate
+
+      - name: Install golang-migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate.linux-amd64 /usr/bin/migrate
+          which migrate
 
       - name: Test
         run: make test
