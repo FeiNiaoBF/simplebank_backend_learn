@@ -1,0 +1,18 @@
+{
+    "sourceFile": "go.mod",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1712472481424,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1712472481424,
+            "name": "Commit-0",
+            "content": "module github.com/FeiNiaoBF/simplebank_backend_learn\n\ngo 1.22.1\n\nrequire github.com/lib/pq v1.10.9\n\nrequire (\n\tgithub.com/davecgh/go-spew v1.1.1 // indirect\n\tgithub.com/pmezard/go-difflib v1.0.0 // indirect\n\tgithub.com/stretchr/testify v1.9.0\n\tgopkg.in/yaml.v3 v3.0.1 // indirect\n)\n"
+        }
+    ]
+}

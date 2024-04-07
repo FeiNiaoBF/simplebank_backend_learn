@@ -1,4 +1,4 @@
-module github.com/FeiNiaoBF/simplebank
+module github.com/FeiNiaoBF/simplebank_backend_learn
 
 go 1.22.1
 
