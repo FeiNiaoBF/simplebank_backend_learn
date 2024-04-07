@@ -5,9 +5,9 @@ name: Go
 
 on:
   push:
-    branches: ['main']
+    branches: [main]
   pull_request:
-    branches: ['main']
+    branches: [main]
 
 jobs:
   test:
@@ -16,7 +16,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:alpine3.18
+        image: postgres:14-alpine
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: secret
@@ -30,23 +30,22 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
         with:
-          go-version: ^1.21
+          go-version: ^1.22
         id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
 
       - name: Install golang-migrate
         run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.linux-amd64.tar.gz -o migrate.linux-amd64.tar.gz
-          tar -xvzf migrate.linux-amd64.tar.gz
-          sudo mv migrate /usr/bin/migrate 
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate.linux-amd64 /usr/bin/migrate
           which migrate
 
-      - name: Run migrations 
+      - name: Run migrations
         run: make migrateup
 
       - name: Test
