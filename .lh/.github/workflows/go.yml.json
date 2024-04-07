@@ -1,0 +1,74 @@
+{
+    "sourceFile": ".github/workflows/go.yml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 14,
+            "patches": [
+                {
+                    "date": 1712471437667,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1712471443877,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n # This workflow will build a golang project\n # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go \n \n-name: Go-\n+name: Go-CI-TEST\n \n on:\n   push:\n     branches: [ \"main\" ]\n"
+                },
+                {
+                    "date": 1712471508643,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,9 @@\n \n jobs:\n \n   build:\n+    name\n     runs-on: ubuntu-latest\n     steps:\n     - uses: actions/checkout@v3\n \n"
+                },
+                {
+                    "date": 1712471515294,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n \n jobs:\n \n   build:\n-    name\n+    name: Build\n     runs-on: ubuntu-latest\n     steps:\n     - uses: actions/checkout@v3\n \n"
+                },
+                {
+                    "date": 1712471577093,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,26 +4,26 @@\n name: Go-CI-TEST\n \n on:\n   push:\n-    branches: [ \"main\" ]\n+    branches: ['main']\n   pull_request:\n-    branches: [ \"main\" ]\n+    branches: ['main']\n \n jobs:\n-\n   build:\n     name: Build\n     runs-on: ubuntu-latest\n     steps:\n-    - uses: actions/checkout@v3\n+      - uses: actions/checkout@v3\n \n-    - name: Set up Go\n-      uses: actions/setup-go@v4\n-      with:\n-        go-version: '1.22.1'\n+      - name: Set up Go\n+        uses: actions/setup-go@v4\n+        with:\n+          go-version: '1.22.1'\n \n-    - name: Build\n-      run: go build -v ./...\n+      - name: Build\n+        run: go build -v ./...\n \n-    - name: Test\n-      run: go test -v ./...\n+      - name: Test\n+        run: go test -v ./...\n+    \n"
+                },
+                {
+                    "date": 1712471587041,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,5 +25,6 @@\n         run: go build -v ./...\n \n       - name: Test\n         run: go test -v ./...\n-    \n+  test:\n+    name: Test\n"
+                },
+                {
+                    "date": 1712471599420,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,4 +27,5 @@\n       - name: Test\n         run: go test -v ./...\n   test:\n     name: Test\n+    runs-on: ubuntu-la\n"
+                },
+                {
+                    "date": 1712471623459,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,7 +25,4 @@\n         run: go build -v ./...\n \n       - name: Test\n         run: go test -v ./...\n-  test:\n-    name: Test\n-    runs-on: ubuntu-la\n"
+                },
+                {
+                    "date": 1712471687831,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,18 +9,19 @@\n   pull_request:\n     branches: ['main']\n \n jobs:\n-  build:\n-    name: Build\n+  test:\n+    name: Test\n     runs-on: ubuntu-latest\n     steps:\n       - uses: actions/checkout@v3\n \n       - name: Set up Go\n         uses: actions/setup-go@v4\n         with:\n           go-version: '1.22.1'\n+        \n \n       - name: Build\n         run: go build -v ./...\n \n"
+                },
+                {
+                    "date": 1712471696780,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,10 +18,10 @@\n \n       - name: Set up Go\n         uses: actions/setup-go@v4\n         with:\n-          go-version: '1.22.1'\n-        \n+          go-version: \n+        id: go\n \n       - name: Build\n         run: go build -v ./...\n \n"
+                },
+                {
+                    "date": 1712471704553,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n \n       - name: Set up Go\n         uses: actions/setup-go@v4\n         with:\n-          go-version: \n+          go-version: ^1.\n         id: go\n \n       - name: Build\n         run: go build -v ./...\n"
+                },
+                {
+                    "date": 1712471911134,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,16 +13,16 @@\n   test:\n     name: Test\n     runs-on: ubuntu-latest\n     steps:\n-      - uses: actions/checkout@v3\n-\n       - name: Set up Go\n         uses: actions/setup-go@v4\n         with:\n-          go-version: ^1.\n-        id: go\n+          go-version: ^1.21\n+        id: go      - uses: actions/checkout@v3\n \n+\n+\n       - name: Build\n         run: go build -v ./...\n \n       - name: Test\n"
+                },
+                {
+                    "date": 1712471916891,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,12 +17,15 @@\n       - name: Set up Go\n         uses: actions/setup-go@v4\n         with:\n           go-version: ^1.21\n-        id: go      - uses: actions/checkout@v3\n+        id: go\n \n+      -\n+      uses: actions/checkout@v3\n \n \n+\n       - name: Build\n         run: go build -v ./...\n \n       - name: Test\n"
+                },
+                {
+                    "date": 1712471923403,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,10 @@\n         with:\n           go-version: ^1.21\n         id: go\n \n-      - name: Check out code into the Go module directory\n+      - name: Check out code in\n+      to the Go module directory\n       uses: actions/checkout@v3\n       - name: Build\n         run: go build -v ./...\n \n"
+                },
+                {
+                    "date": 1712472041224,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,8 +26,9 @@\n       - name: Initialize Modules\n         run: go mod init\n       - name: Install Dependencies\n         run: go mod download\n+        \n       - name: Build\n         run: go build -v ./...\n \n       - name: Test\n"
+                }
+            ],
+            "date": 1712471437667,
+            "name": "Commit-0",
+            "content": "# This workflow will build a golang project\n# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go \n\nname: Go-\n\non:\n  push:\n    branches: [ \"main\" ]\n  pull_request:\n    branches: [ \"main\" ]\n\njobs:\n\n  build:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v3\n\n    - name: Set up Go\n      uses: actions/setup-go@v4\n      with:\n        go-version: '1.22.1'\n\n    - name: Build\n      run: go build -v ./...\n\n    - name: Test\n      run: go test -v ./...\n"
+        }
+    ]
+}
