@@ -29,8 +29,5 @@ jobs:
       #     sudo mv migrate.linux-amd64 /usr/bin/migrate
       #     which migrate
 
-      - name: Build
-        run: go build -v .
-
       - name: Test
         run: make test
