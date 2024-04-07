@@ -1,3 +1,5 @@
+DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
+
 # docker
 postgres:
 	 docker run --name postgres16 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -e TZ=Asia/Shanghai -d postgres:alpine3.18
@@ -10,10 +12,11 @@ stop:
 start:
 	docker start postgres16
 # migrate up or down
-migrationup:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
-migrationdown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+migrateup:
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
+
+migratedown:
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
 
 # sqlc
 sqlc:
@@ -23,4 +26,4 @@ sqlc:
 test:
 	go test -v -cover ./...
 
-.PHONY: createdb dropdb postgres migrationdown migrationup sqlc stop start test
+.PHONY: createdb dropdb postgres migratedown migrateup sqlc stop start test
