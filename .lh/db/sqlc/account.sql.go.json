@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1711787077189,
@@ -20,6 +20,10 @@
                 {
                     "date": 1711874486954,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tCurrency string `json:\"currency\"`\n }\n \n func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {\n-\trow := q.db.QueryRowContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)\n+\trow := q.db.QueryContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)\n \tvar i Account\n \terr := row.Scan(\n \t\t&i.ID,\n \t\t&i.Owner,\n"
+                },
+                {
+                    "date": 1712669836857,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,8 +8,33 @@\n import (\n \t\"context\"\n )\n \n+const addAccountBalance = `-- name: AddAccountBalance :one\n+UPDATE accounts\n+SET balance = balance + $1\n+WHERE id = $2\n+RETURNING id, owner, balance, currency, created_at\n+`\n+\n+type AddAccountBalanceParams struct {\n+\tAmount int64 `json:\"amount\"`\n+\tID     int64 `json:\"id\"`\n+}\n+\n+func (q *Queries) AddAccountBalance(ctx context.Context, arg AddAccountBalanceParams) (Account, error) {\n+\trow := q.db.QueryRowContext(ctx, addAccountBalance, arg.Amount, arg.ID)\n+\tvar i Account\n+\terr := row.Scan(\n+\t\t&i.ID,\n+\t\t&i.Owner,\n+\t\t&i.Balance,\n+\t\t&i.Currency,\n+\t\t&i.CreatedAt,\n+\t)\n+\treturn i, err\n+}\n+\n const createAccount = `-- name: CreateAccount :one\n INSERT INTO accounts (\n   owner,\n   balance,\n@@ -25,9 +50,9 @@\n \tCurrency string `json:\"currency\"`\n }\n \n func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {\n-\trow := q.db.QueryContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)\n+\trow := q.db.QueryRowContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)\n \tvar i Account\n \terr := row.Scan(\n \t\t&i.ID,\n \t\t&i.Owner,\n@@ -65,8 +90,27 @@\n \t)\n \treturn i, err\n }\n \n+const getAccountForUpdate = `-- name: GetAccountForUpdate :one\n+SELECT id, owner, balance, currency, created_at FROM accounts\n+WHERE id = $1 LIMIT 1\n+FOR NO KEY UPDATE\n+`\n+\n+func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, error) {\n+\trow := q.db.QueryRowContext(ctx, getAccountForUpdate, id)\n+\tvar i Account\n+\terr := row.Scan(\n+\t\t&i.ID,\n+\t\t&i.Owner,\n+\t\t&i.Balance,\n+\t\t&i.Currency,\n+\t\t&i.CreatedAt,\n+\t)\n+\treturn i, err\n+}\n+\n const listAccounts = `-- name: ListAccounts :many\n SELECT id, owner, balance, currency, created_at FROM accounts\n ORDER BY id\n LIMIT $1\n"
                 }
             ],
             "date": 1711787077189,

@@ -130,7 +130,7 @@ func assertTransfer(t testing.TB, store *Store, result TransferTxResult, account
 	require.Equal(t, amount, transfer.Amount)
 	require.NotZero(t, transfer.ID)
 	require.NotZero(t, transfer.CreatedAt)
-	_, err := store.query.GetTransfer(context.Background(), transfer.ID)
+	_, err := store.GetTransfer(context.Background(), transfer.ID)
 	require.NoError(t, err)
 }
 
@@ -146,7 +146,7 @@ func assertEntries(t testing.TB, store *Store, result TransferTxResult, account1
 	require.NotZero(t, fromEntry.ID)
 	require.NotZero(t, fromEntry.CreatedAt)
 
-	_, err = store.query.GetEntry(context.Background(), fromEntry.ID)
+	_, err = store.GetEntry(context.Background(), fromEntry.ID)
 	require.NoError(t, err)
 
 	// check the to entry
@@ -157,7 +157,7 @@ func assertEntries(t testing.TB, store *Store, result TransferTxResult, account1
 	require.NotZero(t, toEntry.ID)
 	require.NotZero(t, toEntry.CreatedAt)
 
-	_, err = store.query.GetEntry(context.Background(), toEntry.ID)
+	_, err = store.GetEntry(context.Background(), toEntry.ID)
 	require.NoError(t, err)
 }
 

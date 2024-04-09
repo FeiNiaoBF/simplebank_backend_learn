@@ -18,3 +18,4 @@ packages:
     emit_interface: false
     # singularize the table names.
     emit_exact_table_names: false
+    emit_empty_slices: true

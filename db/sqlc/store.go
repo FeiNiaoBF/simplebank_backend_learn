@@ -24,17 +24,17 @@ type TransferTxResult struct {
 
 // Store provides all functions to execute db queries and transactions
 type Store struct {
-	query *Queries
+	*Queries
 	db    *sql.DB
 }
 
-var txKey = struct{}{} // byte = 0
+// var txKey = struct{}{} // byte = 0
 
 // NewStore creates a new Store
 func NewStore(db *sql.DB) *Store {
 	return &Store{
-		db:    db,
-		query: New(db),
+		db:      db,
+		Queries: New(db),
 	}
 }
 
