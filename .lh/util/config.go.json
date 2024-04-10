@@ -1,0 +1,38 @@
+{
+    "sourceFile": "util/config.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1712746949165,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1712746968703,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,3 @@\n package util\n \n+SERVER_ADDRESS\n"
+                },
+                {
+                    "date": 1712746974888,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,7 @@\n package util\n \n-SERVER_ADDRESS\n+type Config struct {\n+\tDBDriver      string `mapstructure:\"DB_DRIVER\"`\n+\tDBSource      string `mapstructure:\"DB_SOURCE\"`\n+\tServerAddress string `mapstructure:\"SERVER_ADDRESS\"`\n+}\n"
+                },
+                {
+                    "date": 1712747757233,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,4 +4,5 @@\n \tDBDriver      string `mapstructure:\"DB_DRIVER\"`\n \tDBSource      string `mapstructure:\"DB_SOURCE\"`\n \tServerAddress string `mapstructure:\"SERVER_ADDRESS\"`\n }\n+\n"
+                },
+                {
+                    "date": 1712747767250,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,5 +5,5 @@\n \tDBSource      string `mapstructure:\"DB_SOURCE\"`\n \tServerAddress string `mapstructure:\"SERVER_ADDRESS\"`\n }\n \n-func LoadC\n+func LoadCo\n"
+                },
+                {
+                    "date": 1712747777520,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,5 +5,5 @@\n \tDBSource      string `mapstructure:\"DB_SOURCE\"`\n \tServerAddress string `mapstructure:\"SERVER_ADDRESS\"`\n }\n \n-func LoadConfig(path string)\n+func LoadConfig(path string) ()\n"
+                }
+            ],
+            "date": 1712746949165,
+            "name": "Commit-0",
+            "content": "package util\n\n"
+        }
+    ]
+}
