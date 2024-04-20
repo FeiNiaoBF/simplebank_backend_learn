@@ -12,6 +12,7 @@ stop:
 	docker stop postgres16
 start:
 	docker start postgres16
+
 # migrate up or down
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
@@ -23,12 +24,15 @@ migratedown:
 sqlc:
 	sqlc generate
 
+# mock
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc Store
 # go
 test:
-	go test -v ./...
+	go test -v -cover ./...
 
 server:
 	go run main.go
 
 
-.PHONY: createdb dropdb postgres migratedown migrateup sqlc stop start test server
+.PHONY: createdb dropdb postgres migratedown migrateup sqlc stop start test server mock

@@ -15,7 +15,7 @@ packages:
     # to generate codes that work with prepared statement.
     emit_prepared_queries: false
     # to generate Querier interface for the generated package.
-    emit_interface: false
+    emit_interface: true
     # singularize the table names.
     emit_exact_table_names: false
     emit_empty_slices: true

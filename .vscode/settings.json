@@ -2,6 +2,8 @@
     "sqltools.highlightQuery": false,
     "cSpell.words": [
         "DBTX",
+        "gomock",
+        "mockdb",
         "Niao",
         "simplebank",
         "sqlc",

@@ -122,7 +122,7 @@ func assertAccount(t testing.TB, result TransferTxResult, account1, account2 Acc
 }
 
 // assertTransfer checks the transfer result
-func assertTransfer(t testing.TB, store *Store, result TransferTxResult, account1, account2 Account, amount int64) {
+func assertTransfer(t testing.TB, store Store, result TransferTxResult, account1, account2 Account, amount int64) {
 	t.Helper()
 	transfer := result.Transfer
 	require.Equal(t, account1.ID, transfer.FromAccountID)
@@ -135,7 +135,7 @@ func assertTransfer(t testing.TB, store *Store, result TransferTxResult, account
 }
 
 // assertEntries checks the entries created by the transfer
-func assertEntries(t testing.TB, store *Store, result TransferTxResult, account1, account2 Account, amount int64) {
+func assertEntries(t testing.TB, store Store, result TransferTxResult, account1, account2 Account, amount int64) {
 	t.Helper()
 	var err error
 	// check the from entry

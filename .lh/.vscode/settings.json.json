@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1711786349326,
@@ -28,6 +28,10 @@
                 {
                     "date": 1711876330637,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n     \"sqltools.highlightQuery\": false,\n     \"cSpell.words\": [\n         \"DBTX\",\n         \"Niao\",\n+        \"simplebank\",\n         \"sqlc\",\n         \"sslmode\",\n         \"stretchr\"\n     ]\n"
+                },
+                {
+                    "date": 1713600575272,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,9 @@\n {\n     \"sqltools.highlightQuery\": false,\n     \"cSpell.words\": [\n         \"DBTX\",\n+        \"mockdb\",\n         \"Niao\",\n         \"simplebank\",\n         \"sqlc\",\n         \"sslmode\",\n"
                 }
             ],
             "date": 1711786349326,

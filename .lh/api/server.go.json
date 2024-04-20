@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 53,
+            "activePatchIndex": 69,
             "patches": [
                 {
                     "date": 1712639620366,
@@ -220,6 +220,70 @@
                 {
                     "date": 1712665848288,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n \trouter := gin.Default()\n \n \trouter.POST(\"/accounts\", server.createAccount)\n \trouter.GET(\"/accounts/:id\", server.getAccount)\n-\trouter.GET(\"/accounts/:id\", server.getAccount)\n+\trouter.GET(\"/accounts/\", server.listAccount)\n \n \tserver.router = router\n \treturn server\n }\n"
+                },
+                {
+                    "date": 1713582810065,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,8 +4,9 @@\n \tdb \"github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc\"\n \t\"github.com/gin-gonic/gin\"\n )\n \n+\n type Server struct {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n@@ -16,9 +17,9 @@\n \trouter := gin.Default()\n \n \trouter.POST(\"/accounts\", server.createAccount)\n \trouter.GET(\"/accounts/:id\", server.getAccount)\n-\trouter.GET(\"/accounts/\", server.listAccount)\n+\trouter.GET(\"/accounts\", server.listAccount)\n \n \tserver.router = router\n \treturn server\n }\n"
+                },
+                {
+                    "date": 1713582819749,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,12 @@\n \tdb \"github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc\"\n \t\"github.com/gin-gonic/gin\"\n )\n \n-\n+type  struct {\n+\tstore  *db.Store\n+\trouter *gin.Engine\n+}\n type Server struct {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n"
+                },
+                {
+                    "date": 1713582829223,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n \tdb \"github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc\"\n \t\"github.com/gin-gonic/gin\"\n )\n \n-type  struct {\n+type Store struct {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n type Server struct {\n"
+                },
+                {
+                    "date": 1713582836703,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n \tdb \"github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc\"\n \t\"github.com/gin-gonic/gin\"\n )\n \n-type Store struct {\n+type Store  {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n type Server struct {\n"
+                },
+                {
+                    "date": 1713582842314,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n \tdb \"github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc\"\n \t\"github.com/gin-gonic/gin\"\n )\n \n-type Store  {\n+type Store interface {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n type Server struct {\n"
+                },
+                {
+                    "date": 1713582849543,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,10 +5,9 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Store interface {\n-\tstore  *db.Store\n-\trouter *gin.Engine\n+\n }\n type Server struct {\n \tstore  *db.Store\n \trouter *gin.Engine\n"
+                },
+                {
+                    "date": 1713582878368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n \n type Store interface {\n \n }\n-type Server struct {\n+type  struct {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n \n"
+                },
+                {
+                    "date": 1713582888717,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,12 +4,9 @@\n \tdb \"github.com/FeiNiaoBF/simplebank_backend_learn/db/sqlc\"\n \t\"github.com/gin-gonic/gin\"\n )\n \n-type Store interface {\n-\n-}\n-type  struct {\n+type Server struct {\n \tstore  *db.Store\n \trouter *gin.Engine\n }\n \n"
+                },
+                {
+                    "date": 1713593611235,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,9 @@\n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n-func NewServer(store *db.Store) *Server {\n+func NewServer(store db.Store) *Server {\n \tserver := &Server{store: store}\n \trouter := gin.Default()\n \n \trouter.POST(\"/accounts\", server.createAccount)\n"
+                },
+                {
+                    "date": 1713593715598,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n }\n \n // NewServer create a new Server instance\n func NewServer(store db.Store) *Server {\n-\tserver := &Server{store: store}\n+\tserver := &Server{store: }\n \trouter := gin.Default()\n \n \trouter.POST(\"/accounts\", server.createAccount)\n \trouter.GET(\"/accounts/:id\", server.getAccount)\n"
+                },
+                {
+                    "date": 1713593756002,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,15 +5,15 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Server struct {\n-\tstore  *db.Store\n+\tstore\n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n func NewServer(store db.Store) *Server {\n-\tserver := &Server{store: }\n+\tserver := &Server{store: store}\n \trouter := gin.Default()\n \n \trouter.POST(\"/accounts\", server.createAccount)\n \trouter.GET(\"/accounts/:id\", server.getAccount)\n"
+                },
+                {
+                    "date": 1713593763765,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Server struct {\n-\tstore\n+\tstore  \n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n"
+                },
+                {
+                    "date": 1713593771218,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Server struct {\n-\tstore  \n+\tstore  Store\n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n"
+                },
+                {
+                    "date": 1713593795285,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Server struct {\n-\tstore  Store\n+\tstore  db.SQLStore\n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n"
+                },
+                {
+                    "date": 1713593826822,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Server struct {\n-\tstore  db.SQLStore\n+\tstore  *db.Store\n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n"
+                },
+                {
+                    "date": 1713594017346,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \t\"github.com/gin-gonic/gin\"\n )\n \n type Server struct {\n-\tstore  *db.Store\n+\tstore  db.Store\n \trouter *gin.Engine\n }\n \n // NewServer create a new Server instance\n"
                 }
             ],
             "date": 1712639620366,
